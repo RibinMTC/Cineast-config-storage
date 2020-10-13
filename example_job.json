@@ -1,41 +1,70 @@
 {
-	"input":{
-		"path": "data/",
-		"depth": 3,
-		"skip": 0,
-		"id": {
-			"name": "SequentialObjectIdGenerator",
-			"properties": {}
-		}
-	},
-	"extractors":[
-		{"name": "AverageColor"},
-		{"name": "AverageColorARP44"},
-		{"name": "AverageColorCLD"},
-		{"name": "AverageColorGrid8"},
-		{"name": "AverageColorRaster"},
-		{"name": "AverageFuzzyHist"},
-		{"name": "AverageColorGrid8Reduced15"},
-		{"name": "CLD"},
-		{"name": "EdgeARP88"},
-		{"name": "EdgeGrid16"},
-		{"name": "EHD"},
-		{"name": "HPCP12Shingle"},
-		{"name": "MedianColor"},
-		{"name": "MedianColorGrid8"},
-		{"name": "HOGMirflickr25K512"},
-		{"name": "SURFMirflickr25K512"}
-	],
-	"exporters":[
-		{
-			"name": "ShotThumbNails",
-			"properties": {
-				"destination":"thumbnails/"
-			}
-		}
-	],
-	"database":{
-		"writer": "PROTO",
-		"selector": "NONE"
-	}
+    "input": {
+        "path": "/home/cribin/Aesthetics_ContentViewer_MainFolder/content-base/import_6",
+        "depth": 2,
+        "skip": 0,
+        "id": {
+            "name": "UniqueObjectIdGenerator",
+            "properties": {}
+        }
+    },
+    "extractors": [
+        {
+            "name": "AverageColor"
+        },
+        {
+            "name": "AverageColorARP44"
+        },
+        {
+            "name": "AverageColorCLD"
+        },
+        {
+            "name": "AverageColorGrid8"
+        },
+        {
+            "name": "AverageColorRaster"
+        },
+        {
+            "name": "AverageFuzzyHist"
+        },
+        {
+            "name": "AverageColorGrid8Reduced15"
+        },
+        {
+            "name": "CLD"
+        },
+        {
+            "name": "EdgeARP88"
+        },
+        {
+            "name": "EdgeGrid16"
+        },
+        {
+            "name": "EHD"
+        },
+        {
+            "name": "HPCP12Shingle"
+        },
+        {
+            "name": "MedianColor"
+        },
+        {
+            "name": "MedianColorGrid8"
+        },
+        {
+            "name": "AestheticScoreExtractor"
+        }
+    ],
+    "exporters": [
+        {
+            "name": "ShotThumbnailsExporter",
+            "properties": {
+                "destination": "../../output-thumbnails"
+            }
+        }
+    ],
+    "database": {
+        "writer": "COTTONTAIL",
+        "selector": "COTTONTAIL"
+    }
 }

@@ -73,7 +73,6 @@ public final class RetrievalRuntimeConfig {
 		list = new ArrayList<>(3);
 		list.add(new RetrieverConfig(SubtitleFulltextSearch.class,    1.0));
 		list.add(new RetrieverConfig(DescriptionTextSearch.class,    1.0));
-		
 //		list.add(new RetrieverConfig(QueryImageExporter.class, 			0.001));
 		DEFAULT_RETRIEVER_CATEGORIES.put("meta", list);
 	}

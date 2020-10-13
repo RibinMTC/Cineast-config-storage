@@ -15,10 +15,7 @@
     "maxResults": 1000,
     "resultsPerModule": 1500,
     "features": {
-      "semantic" : [
-        {"feature": "ConceptMasksAde20k", "weight" : 1.0}
-      ],
-      "globalcolor": [
+	"globalcolor": [
         {"feature": "AverageColor",  "weight": 2.3},
         {"feature": "MedianColor", "weight": 1.2},
         {"feature": "AverageFuzzyHist", "weight": 0.7},
@@ -36,40 +33,14 @@
         {"feature": "MedianColorGrid8", "weight": 1.7},
         {"feature": "AverageColorRaster", "weight": 1.0}
       ],
-      "edge": [
-        {"feature": "EHD", "weight": 0.7},
-        {"feature": "DominantEdgeGrid16", "weight": 1.4},
-        {"feature": "DominantEdgeGrid8", "weight": 1.4}
-      ],
-      "motion": [
-        {"feature": "SubDivMotionHistogram3", "weight": 0.5},
-        {"feature": "SubDivMotionHistogram5", "weight": 0.5},
-        {"feature": "SubDivMotionHistogramBackground3", "weight": 0.5},
-        {"feature": "SubDivMotionHistogramBackground5", "weight": 0.5}
-      ],
-      "quantized": [
-
-      ],
-      "localfeatures": [
-        {"feature": "HOGMirflickr25K512", "weight": 1.0}
-      ],
-      "localfeatures_fast": [
-        {"feature": "HOGMirflickr25K256", "weight": 1.0}
-      ],
-      "audiofingerprint": [
-        {"feature": "HPCP12Shingle", "weight": 1.0}
-      ],
-      "tags": [
-        {"feature": "SegmentTags", "weight": 1.0}
-      ],
-      "ocr": [
-        {"feature": "OCRSearch", "weight": 1.0}
-      ],
-      "asr": [
-        {"feature":  "AudioTranscriptionSearch", "weight":  1.0}
-      ],
-      "scenecaption": [
-        {"feature":  "DescriptionTextSearch", "weight":  1.0}
+      "boolean": [
+	{	"feature":  "SortedByAestheticScoreRetriever", "weight": 1.0,
+		"properties": 
+	 	{
+			"entity": "features_aestheticscore",
+			"attribute": "feature"
+		}	
+	}
       ]
     }
   },
@@ -117,8 +88,8 @@
     "serveContent": true,
     "serveUI": true,
     "uiLocation": "dist",
-    "thumbnailLocation": "thumbnails",
-    "objectLocation": "objects"
+    "thumbnailLocation": "../../output-thumbnails",
+    "objectLocation": "../../content-base"
   },
 
   "monitoring":{

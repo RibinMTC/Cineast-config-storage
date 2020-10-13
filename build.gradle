@@ -68,6 +68,9 @@ subprojects {
         compile group: "io.grpc", name: "grpc-netty", version: "${grpcVersion}"
         compile group: "io.grpc", name: "grpc-protobuf", version: "${grpcVersion}"
         compile group: "io.grpc", name: "grpc-stub", version: "${grpcVersion}"
+
+        /** UniRest for Rest communication */
+        compile 'com.mashape.unirest:unirest-java:1.4.9'
     }
 }
 
