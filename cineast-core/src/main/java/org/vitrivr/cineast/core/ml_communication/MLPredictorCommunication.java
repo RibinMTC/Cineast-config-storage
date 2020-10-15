@@ -38,7 +38,7 @@ public enum MLPredictorCommunication {
         objectIDToUrlMap.put(objectID, contentAbsolutePath);
     }
 
-    public JSONObject getJsonResponseFromMLPredictor(String objectID) {
+    public JSONObject getJsonResponseFromMLPredictor(String objectID, String featureToExtract) {
 
         if(objectIDToServerResponseMap.containsKey(objectID))
             return objectIDToServerResponseMap.get(objectID);
@@ -53,7 +53,7 @@ public enum MLPredictorCommunication {
 
         String contentPath = objectIDToUrlMap.get(objectID);//baseContentUrlPath + "/" + objectID;
         try {
-            HttpResponse<JsonNode> response = Unirest.post("http://localhost:5000/predict")
+            HttpResponse<JsonNode> response = Unirest.post("http://localhost:5000/predict/" + featureToExtract)
                     .header("Content-Type", "application/json")
                     .body("{\"contentPath\":\"" + contentPath + "\"}")
                     .asJson();
