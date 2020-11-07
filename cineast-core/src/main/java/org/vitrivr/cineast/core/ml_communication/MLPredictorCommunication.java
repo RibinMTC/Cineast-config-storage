@@ -17,7 +17,7 @@ public enum MLPredictorCommunication {
 
     private HashMap<String, String> objectIDToUrlMap;
     private HashMap<String, JSONObject> objectIDToServerResponseMap;
-    private String baseContentUrlPath;
+    private HashMap<String, String> mlPredictorsConfig;
 
     MLPredictorCommunication() {
         objectIDToUrlMap = new HashMap<>();
@@ -28,34 +28,50 @@ public enum MLPredictorCommunication {
         return INSTANCE;
     }
 
-   /* public void setBaseUrlPath(String baseContentUrlPath)
-    {
-        this.baseContentUrlPath = baseContentUrlPath;
-    }*/
-
-    public void setObjectIDAbsolutePath(String objectID, String contentAbsolutePath)
-    {
+    public void setObjectIDAbsolutePath(String objectID, String contentAbsolutePath) {
         objectIDToUrlMap.put(objectID, contentAbsolutePath);
     }
 
-    public JSONObject getJsonResponseFromMLPredictor(String objectID, String featureToExtract) {
+    public void setMlPredictorsConfig(HashMap<String, String> mlPredictorsConfig)
+    {
+        this.mlPredictorsConfig = mlPredictorsConfig;
+    }
 
-        if(objectIDToServerResponseMap.containsKey(objectID))
+    public JSONObject getJsonResponseFromMLPredictor(String objectID, String featureToPredict, int shotStart, int shotEnd) {
+
+        if (objectIDToServerResponseMap.containsKey(objectID))
             return objectIDToServerResponseMap.get(objectID);
 
-
-        if(!objectIDToUrlMap.containsKey(objectID))
+        if(mlPredictorsConfig == null)
         {
+            System.out.println("MlPredictorsConfig not set in cineast.json. Cannot extract to ml predictors.");
+            return null;
+        }
+
+        if(!mlPredictorsConfig.containsKey(featureToPredict))
+        {
+            System.out.println("MlPredictorsConfig does not contain key: " + featureToPredict + "Cannot extract to ml predictors");
+            return null;
+        }
+
+        if (!objectIDToUrlMap.containsKey(objectID)) {
             System.out.println("Aborting extraction. ObjectID " + objectID + " has no stored absolute path");
             return null;
         }
 
 
-        String contentPath = objectIDToUrlMap.get(objectID);//baseContentUrlPath + "/" + objectID;
+        String contentPath = objectIDToUrlMap.get(objectID);
         try {
-            HttpResponse<JsonNode> response = Unirest.post("http://localhost:5000/predict/" + featureToExtract)
+            if(shotEnd != 0)
+                Unirest.setTimeouts(10000, 120000);
+            else
+                Unirest.setTimeouts(10000, 60000);
+
+            HttpResponse<JsonNode> response = Unirest.post(mlPredictorsConfig.get(featureToPredict))
                     .header("Content-Type", "application/json")
-                    .body("{\"contentPath\":\"" + contentPath + "\"}")
+                    .body("{\"contentPath\":\"" + contentPath + "\"," +
+                            "\"startFrame\":\"" + shotStart + "\","+
+                            "\"endFrame\":\"" + shotEnd + "\"}")
                     .asJson();
 
             JsonNode responseBody = response.getBody();

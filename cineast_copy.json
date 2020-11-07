@@ -96,18 +96,13 @@
     "serveContent": true,
     "serveUI": true,
     "uiLocation": "dist",
-    "thumbnailLocation": "../../output-thumbnails",
-    "objectLocation": "../../content-base"
+    "thumbnailLocation": "/local/home/cribin/Documents/AestheticsBackup/UploadAndExtractionManager/content-storage-test/output-thumbnails",
+    "objectLocation": "/local/home/cribin/Documents/AestheticsBackup/Datasets/ava_large_dataset/extracted_images/images/"
   },
 
   "monitoring":{
     "enablePrometheus": false,
     "prometheusPort": 4569
-  },
-
-  "mlPredictorsConfig": {
-    "aesthetic score": "http://localhost:5001/predict",
-    "facial emotion": "http://localhost:5002/predict"
   }
 
 }

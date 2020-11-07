@@ -11,9 +11,7 @@ import org.vitrivr.cineast.core.ml_extractor_base.AbstractMLExtractor;
 
 public class FacialEmotionExtractor extends AbstractMLExtractor {
 
-    private final String serverResponseFacialEmotionKey = "facial emotion";
-
-    private final String featureToExtract = "facial_emotion";
+    private final String featureToPredict = "facial emotion";
 
 
     public FacialEmotionExtractor() {
@@ -26,6 +24,10 @@ public class FacialEmotionExtractor extends AbstractMLExtractor {
             return;
 
         //Todo: Don't process if the shot is a video, since aesthetic score only works on images
+        if(shot.getEnd() != 0) {
+            System.out.println("Facial Emotion does not currently support videos. Aborting extraction");
+            return;
+        }
 
         if (!phandler.idExists(shot.getId())) {
             String facialEmotion = getPredictedFacialEmotion(shot.getSuperId());
@@ -41,11 +43,20 @@ public class FacialEmotionExtractor extends AbstractMLExtractor {
     }
 
     private String getPredictedFacialEmotion(String objectID) {
-        JSONObject serverResponse = MLPredictorCommunication.getInstance().getJsonResponseFromMLPredictor(objectID, featureToExtract);
-        if (serverResponse == null) {
-            System.out.println("Server Response is null. No " + featureToExtract + "extracted for shot:" + objectID);
+        JSONObject serverResponse = null;
+        try {
+            serverResponse = MLPredictorCommunication.getInstance().getJsonResponseFromMLPredictor(objectID, featureToPredict, 0, 0);
+            if (serverResponse == null) {
+                System.out.println("Server Response is null. No " + featureToPredict + "extracted for shot:" + objectID);
+                return null;
+            }
+            return serverResponse.getString(featureToPredict);
+        }
+        catch(Exception exception)
+        {
+            if(serverResponse != null)
+                System.out.println("Exception occurred for facial emotion detection for shot: " + objectID + ". Received server response: " + serverResponse);
             return null;
         }
-        return serverResponse.getString(serverResponseFacialEmotionKey);
     }
 }

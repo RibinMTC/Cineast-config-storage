@@ -9,11 +9,10 @@ import org.vitrivr.cineast.core.ml_communication.MLPredictorCommunication;
 import org.vitrivr.cineast.core.ml_extractor_base.AbstractMLExtractor;
 
 
+
 public class AestheticScoreExtractor extends AbstractMLExtractor {
 
-    private final String serverResponseAestheticScoreKey = "aesthetic score";
-
-    private final String featureToExtract = "aesthetic_score";
+    private final String featureToPredict = "aesthetic score";
 
     public AestheticScoreExtractor() {
         super("features_AestheticScore", AttributeDefinition.AttributeType.FLOAT);
@@ -26,14 +25,16 @@ public class AestheticScoreExtractor extends AbstractMLExtractor {
         if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME)
             return;
 
-        //Todo: Don't process if the shot is a video, since aesthetic score only works on images
+        int shotStart = shot.getStart();
+        int shotEnd = shot.getEnd();
 
         if (!phandler.idExists(shot.getId())) {
-            float serverScore = getPredictedAestheticScore(shot.getSuperId());
+            float serverScore = getPredictedAestheticScore(shot.getSuperId(), shotStart, shotEnd);
             if (serverScore == -1)
                 return;
 
             String shotId = shot.getId();
+
 
             persist(shotId, PrimitiveTypeProvider.fromObject(serverScore));
             System.out.println("Aesthetic Score for shotId: " + shotId + " score: " + serverScore);
@@ -41,12 +42,22 @@ public class AestheticScoreExtractor extends AbstractMLExtractor {
 
     }
 
-    private float getPredictedAestheticScore(String objectID) {
-        JSONObject serverResponse = MLPredictorCommunication.getInstance().getJsonResponseFromMLPredictor(objectID, featureToExtract);
-        if (serverResponse == null) {
-            System.out.println("Server Response is null. Aborting Extraction");
+    private float getPredictedAestheticScore(String objectID, int shotStart, int shotEnd) {
+        JSONObject serverResponse = null;
+        try {
+
+            serverResponse = MLPredictorCommunication.getInstance().getJsonResponseFromMLPredictor(objectID, featureToPredict, shotStart, shotEnd);
+            if (serverResponse == null) {
+                System.out.println("Server Response is null. Aborting Extraction");
+                return -1;
+            }
+            return (float) serverResponse.getDouble(featureToPredict);
+        }
+        catch (Exception e)
+        {
+            if(serverResponse != null)
+                System.out.println("Exception occurred for aesthetic score detection shot: " + objectID + ". Received server response: " + serverResponse);
             return -1;
         }
-        return (float) serverResponse.getDouble(serverResponseAestheticScoreKey);
     }
 }

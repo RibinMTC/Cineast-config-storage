@@ -29,6 +29,7 @@ public class AverageColor extends AbstractFeatureModule {
 
   @Override
   public void processSegment(SegmentContainer shot) {
+
     if (shot.getAvgImg() == MultiImage.EMPTY_MULTIIMAGE) {
       return;
     }

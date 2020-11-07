@@ -27,6 +27,7 @@ public class Config {
     private HashMap<MediaType, DecoderConfig> decoders;
     private BenchmarkConfig benchmark = new BenchmarkConfig();
     private MonitoringConfig monitoring = new MonitoringConfig();
+    private HashMap<String, String> mlPredictorsConfig = new HashMap<>();
 
     /**
      * Accessor for shared (i.e. application wide) configuration.
@@ -132,4 +133,8 @@ public class Config {
     public void setMonitoring(MonitoringConfig monitoring) {
       this.monitoring = monitoring;
     }
+
+    @JsonProperty
+    public HashMap<String, String> getMlPredictorsConfig() {return mlPredictorsConfig;}
+    public void setMlPredictorsConfig(HashMap<String, String> mlPredictorsConfig) {this.mlPredictorsConfig = mlPredictorsConfig;}
 }

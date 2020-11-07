@@ -3,11 +3,7 @@ package org.vitrivr.cineast.standalone.run;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +24,7 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.segments.Model3DSegment;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.data.segments.VideoSegment;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
@@ -129,6 +126,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         handlers.put(MediaType.IMAGE_SEQUENCE, new ImmutablePair<>(ImageSequenceDecoder::new, () -> new ImageSequenceSegmenter(context)));
         handlers.put(MediaType.AUDIO, new ImmutablePair<>(FFMpegAudioDecoder::new, () -> new ConstantLengthAudioSegmenter(context)));
         handlers.put(MediaType.VIDEO, new ImmutablePair<>(FFMpegVideoDecoder::new, () -> new VideoHistogramSegmenter(context)));
+
         handlers.put(MediaType.MODEL3D, new ImmutablePair<>(ModularMeshDecoder::new, () -> new PassthroughSegmenter<Mesh>() {
             @Override
             protected SegmentContainer getSegmentFromContent(Mesh content) {
@@ -142,8 +140,6 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         //TODO Config should allow for multiple segmenters
 
         this.handlers.forEach((key, value) -> handlerCache.put(key, ImmutablePair.of(value.getLeft().get(), value.getRight().get())));
-
-       // MLPredictorCommunication.getInstance().setBaseUrlPath(Config.sharedConfig().getApi().getApiAddress() + "objects");
 
     }
 
@@ -167,6 +163,11 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
             }
         }
 
+        int numOfFilesToProcess = -1;
+        if(this.context.inputPath().isPresent()) {
+            numOfFilesToProcess = Objects.requireNonNull(this.context.inputPath().get().toFile().list()).length;
+            System.out.println("File input path length : " + numOfFilesToProcess);
+        }
         /* Process until there's nothing left*/
         while ((pair = this.nextItem()) != null) {
             try {
@@ -290,6 +291,10 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
                 if (this.count_processed % 50 == 0) {
                     System.gc();
                 }
+
+                if(numOfFilesToProcess > 0 && this.count_processed % 5 == 0)
+                    printProgress(this.count_processed, numOfFilesToProcess);
+
             } catch (Throwable t) {
                 LOGGER.error("Exception while processing path {}, {}", pair.getLeft(), t.getMessage());
                 t.printStackTrace();
@@ -540,6 +545,12 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
         String[] split = fullPath.split("/");
         int numOfElements = split.length;
         return String.join("/", new String[]{split[numOfElements - 2], split[numOfElements - 1]});
+    }
+
+    private void printProgress(long currentCount, int totalNumOfElements)
+    {
+        float percentage = currentCount/(float)totalNumOfElements * 100;
+        System.out.println("---------------------Progress: " + percentage + "% ---------------------------");
     }
 
 
