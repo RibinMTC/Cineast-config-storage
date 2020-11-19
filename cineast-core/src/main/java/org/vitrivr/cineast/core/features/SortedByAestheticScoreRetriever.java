@@ -1,5 +1,6 @@
 package org.vitrivr.cineast.core.features;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.Triple;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveProviderComparator;
@@ -39,15 +40,15 @@ public class SortedByAestheticScoreRetriever extends BooleanRetriever {
         super(properties);
     }
 
-    public PrimitiveTypeProvider getMinimum(String column){
-        if (this.attributes.contains(column) && !this.minimumMap.containsKey(column)){
+    public PrimitiveTypeProvider getMinimum(String column) {
+        if (this.attributes.contains(column) && !this.minimumMap.containsKey(column)) {
             populateExtremaMap();
         }
         return minimumMap.get(column);
     }
 
-    public PrimitiveTypeProvider getMaximum(String column){
-        if (this.attributes.contains(column) && !this.maximumMap.containsKey(column)){
+    public PrimitiveTypeProvider getMaximum(String column) {
+        if (this.attributes.contains(column) && !this.maximumMap.containsKey(column)) {
             populateExtremaMap();
         }
         return maximumMap.get(column);
@@ -67,7 +68,7 @@ public class SortedByAestheticScoreRetriever extends BooleanRetriever {
                 if (comparator.compare(t, min) < 0) {
                     min = t;
                 }
-                if (comparator.compare(max, t) > 0) {
+                if (comparator.compare(t, max) > 0) {
                     max = t;
                 }
             }
@@ -83,13 +84,15 @@ public class SortedByAestheticScoreRetriever extends BooleanRetriever {
 
     @Override
     protected List<ScoreElement> getMatching(List<BooleanExpression> expressions, ReadableQueryConfig qc) {
-        List<Map<String, PrimitiveTypeProvider>> rows = selector.getRowsAND(expressions.stream().map(be -> Triple.of(be.getAttribute().contains(this.entity) ? be.getAttribute().substring(this.entity.length() + 1) : be.getAttribute(), be.getOperator(), be.getValues())).collect(Collectors.toList()), "id", Collections.singletonList("id"), qc);
+        List<Map<String, PrimitiveTypeProvider>> rows = selector.getRowsAND(expressions.stream().map(be ->
+                Triple.of(be.getAttribute().contains(this.entity) ? be.getAttribute().substring(this.entity.length() + 1) : be.getAttribute(), be.getOperator(), be.getValues())).collect(Collectors.toList()), "id", Lists.newArrayList("id", "feature"), qc); //Collections.singletonList("id")
 
-        List<Map<String, PrimitiveTypeProvider>> features = selector.getRowsAND(expressions.stream().map(be -> Triple.of(be.getAttribute().contains(this.entity) ? be.getAttribute().substring(this.entity.length() + 1) : be.getAttribute(), be.getOperator(), be.getValues())).collect(Collectors.toList()), "id", Collections.singletonList("feature"), qc);
+        //List<Map<String, PrimitiveTypeProvider>> features = selector.getRowsAND(expressions.stream().map(be -> Triple.of(be.getAttribute().contains(this.entity) ? be.getAttribute().substring(this.entity.length() + 1) : be.getAttribute(), be.getOperator(), be.getValues())).collect(Collectors.toList()), "id", Collections.singletonList("feature"), qc);
         int rowsCount = rows.size();
         List<ScoreElement> scoreElements = new ArrayList<>();
         for (int i = 0; i < rowsCount; i++) {
-            scoreElements.add(new SegmentScoreElement(rows.get(i).get("id").getString(), features.get(i).get("feature").getDouble()/10d));
+            Map<String, PrimitiveTypeProvider> row = rows.get(i);
+            scoreElements.add(new SegmentScoreElement(row.get("id").getString(), row.get("feature").getDouble() / 10d));
         }
 
         return scoreElements;

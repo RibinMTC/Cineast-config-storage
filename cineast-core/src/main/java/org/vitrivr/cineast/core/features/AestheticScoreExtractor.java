@@ -5,17 +5,17 @@ import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
-import org.vitrivr.cineast.core.ml_communication.MLPredictorCommunication;
-import org.vitrivr.cineast.core.ml_extractor_base.AbstractMLExtractor;
+import org.vitrivr.cineast.core.remote_extractor_base.BaseRemoteFeatureExtractor;
+import org.vitrivr.cineast.core.remote_predictor_communication.RemotePredictorCommunication;
 
 
 
-public class AestheticScoreExtractor extends AbstractMLExtractor {
+public class AestheticScoreExtractor extends BaseRemoteFeatureExtractor {
 
     private final String featureToPredict = "aesthetic score";
 
     public AestheticScoreExtractor() {
-        super("features_AestheticScore", AttributeDefinition.AttributeType.FLOAT);
+        super("features_AestheticScore", new AttributeDefinition[]{new AttributeDefinition("feature",AttributeDefinition.AttributeType.FLOAT)});
 
     }
 
@@ -46,7 +46,7 @@ public class AestheticScoreExtractor extends AbstractMLExtractor {
         JSONObject serverResponse = null;
         try {
 
-            serverResponse = MLPredictorCommunication.getInstance().getJsonResponseFromMLPredictor(objectID, featureToPredict, shotStart, shotEnd);
+            serverResponse = RemotePredictorCommunication.getInstance().getJsonResponseFromMLPredictor(objectID, featureToPredict, shotStart, shotEnd);
             if (serverResponse == null) {
                 System.out.println("Server Response is null. Aborting Extraction");
                 return -1;

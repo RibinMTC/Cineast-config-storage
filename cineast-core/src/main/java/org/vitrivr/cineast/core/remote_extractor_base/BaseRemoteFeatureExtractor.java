@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.ml_extractor_base;
+package org.vitrivr.cineast.core.remote_extractor_base;
 
 import org.vitrivr.cineast.core.data.entities.SimplePrimitiveTypeProviderFeatureDescriptor;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
@@ -9,21 +9,21 @@ import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 
+import java.util.HashMap;
 import java.util.function.Supplier;
 
-public abstract class AbstractMLExtractor implements Extractor {
+public abstract class BaseRemoteFeatureExtractor implements Extractor {
 
     protected final String tableName;
-    private final String columnName = "feature";
-    private final AttributeDefinition.AttributeType attributeType;
+    private final AttributeDefinition[] columnNameAndType;
 
     protected PrimitiveTypeProviderFeatureDescriptorWriter primitiveWriter;
     protected PersistencyWriter<?> phandler;
 
-
-    public AbstractMLExtractor(String tableName, AttributeDefinition.AttributeType attributeType) {
+    public BaseRemoteFeatureExtractor(String tableName, AttributeDefinition[] columnNameAndType)
+    {
         this.tableName = tableName;
-        this.attributeType = attributeType;
+        this.columnNameAndType = columnNameAndType;
     }
 
     protected void persist(String shotId, PrimitiveTypeProvider fv) {
@@ -31,7 +31,6 @@ public abstract class AbstractMLExtractor implements Extractor {
 
         this.primitiveWriter.write(descriptor);
     }
-
 
     @Override
     public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
@@ -54,7 +53,7 @@ public abstract class AbstractMLExtractor implements Extractor {
 
     @Override
     public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-        supply.get().createFeatureEntity(this.tableName, true, new AttributeDefinition(columnName, attributeType));
+        supply.get().createFeatureEntity(tableName, true, columnNameAndType);
     }
 
     @Override

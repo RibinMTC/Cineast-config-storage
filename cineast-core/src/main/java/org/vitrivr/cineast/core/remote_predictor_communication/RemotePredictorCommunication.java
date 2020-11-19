@@ -1,4 +1,4 @@
-package org.vitrivr.cineast.core.ml_communication;
+package org.vitrivr.cineast.core.remote_predictor_communication;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -11,20 +11,20 @@ import java.util.HashMap;
 import static org.jcodec.common.Assert.assertEquals;
 import static org.jcodec.common.Assert.assertNotNull;
 
-public enum MLPredictorCommunication {
+public enum RemotePredictorCommunication {
 
     INSTANCE;
 
     private HashMap<String, String> objectIDToUrlMap;
     private HashMap<String, JSONObject> objectIDToServerResponseMap;
-    private HashMap<String, String> mlPredictorsConfig;
+    private HashMap<String, String> remotePredictorsConfig;
 
-    MLPredictorCommunication() {
+    RemotePredictorCommunication() {
         objectIDToUrlMap = new HashMap<>();
         objectIDToServerResponseMap = new HashMap<>();
     }
 
-    public static MLPredictorCommunication getInstance() {
+    public static RemotePredictorCommunication getInstance() {
         return INSTANCE;
     }
 
@@ -32,9 +32,9 @@ public enum MLPredictorCommunication {
         objectIDToUrlMap.put(objectID, contentAbsolutePath);
     }
 
-    public void setMlPredictorsConfig(HashMap<String, String> mlPredictorsConfig)
+    public void setRemotePredictorsConfig(HashMap<String, String> remotePredictorsConfig)
     {
-        this.mlPredictorsConfig = mlPredictorsConfig;
+        this.remotePredictorsConfig = remotePredictorsConfig;
     }
 
     public JSONObject getJsonResponseFromMLPredictor(String objectID, String featureToPredict, int shotStart, int shotEnd) {
@@ -42,13 +42,13 @@ public enum MLPredictorCommunication {
         if (objectIDToServerResponseMap.containsKey(objectID))
             return objectIDToServerResponseMap.get(objectID);
 
-        if(mlPredictorsConfig == null)
+        if(remotePredictorsConfig == null)
         {
             System.out.println("MlPredictorsConfig not set in cineast.json. Cannot extract to ml predictors.");
             return null;
         }
 
-        if(!mlPredictorsConfig.containsKey(featureToPredict))
+        if(!remotePredictorsConfig.containsKey(featureToPredict))
         {
             System.out.println("MlPredictorsConfig does not contain key: " + featureToPredict + "Cannot extract to ml predictors");
             return null;
@@ -67,7 +67,7 @@ public enum MLPredictorCommunication {
             else
                 Unirest.setTimeouts(10000, 60000);
 
-            HttpResponse<JsonNode> response = Unirest.post(mlPredictorsConfig.get(featureToPredict))
+            HttpResponse<JsonNode> response = Unirest.post(remotePredictorsConfig.get(featureToPredict))
                     .header("Content-Type", "application/json")
                     .body("{\"contentPath\":\"" + contentPath + "\"," +
                             "\"startFrame\":\"" + shotStart + "\","+

@@ -24,7 +24,6 @@ import org.vitrivr.cineast.core.data.entities.MediaSegmentDescriptor;
 import org.vitrivr.cineast.core.data.m3d.Mesh;
 import org.vitrivr.cineast.core.data.segments.Model3DSegment;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
-import org.vitrivr.cineast.core.data.segments.VideoSegment;
 import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.dao.reader.MediaObjectReader;
@@ -48,7 +47,7 @@ import org.vitrivr.cineast.core.extraction.segmenter.image.ImageSegmenter;
 import org.vitrivr.cineast.core.extraction.segmenter.image.ImageSequenceSegmenter;
 import org.vitrivr.cineast.core.extraction.segmenter.video.VideoHistogramSegmenter;
 import org.vitrivr.cineast.core.features.abstracts.MetadataFeatureModule;
-import org.vitrivr.cineast.core.ml_communication.MLPredictorCommunication;
+import org.vitrivr.cineast.core.remote_predictor_communication.RemotePredictorCommunication;
 import org.vitrivr.cineast.core.util.LogHelper;
 import org.vitrivr.cineast.core.util.MimeTypeHelper;
 import org.vitrivr.cineast.core.util.ReflectionHelper;
@@ -236,7 +235,7 @@ public class GenericExtractionItemHandler implements Runnable, ExtractionItemPro
 
                                 int emissionTimeout = 1000;
 
-                                MLPredictorCommunication.getInstance().setObjectIDAbsolutePath(container.getSuperId(), pair.getKey().getPathForExtraction().toString());
+                                RemotePredictorCommunication.getInstance().setObjectIDAbsolutePath(container.getSuperId(), pair.getKey().getPathForExtraction().toString());
                                 while (!this.pipeline.emit(container, emissionTimeout)) {
                                     LOGGER.warn(
                                             "ExtractionPipeline is full - deferring emission of segment. Consider increasing the thread-pool count for the extraction pipeline.");

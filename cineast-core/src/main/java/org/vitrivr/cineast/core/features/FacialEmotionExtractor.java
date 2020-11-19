@@ -5,17 +5,17 @@ import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;;
-import org.vitrivr.cineast.core.ml_communication.MLPredictorCommunication;
-import org.vitrivr.cineast.core.ml_extractor_base.AbstractMLExtractor;
+import org.vitrivr.cineast.core.remote_extractor_base.BaseRemoteFeatureExtractor;
+import org.vitrivr.cineast.core.remote_predictor_communication.RemotePredictorCommunication;
 
 
-public class FacialEmotionExtractor extends AbstractMLExtractor {
+public class FacialEmotionExtractor extends BaseRemoteFeatureExtractor {
 
     private final String featureToPredict = "facial emotion";
 
 
     public FacialEmotionExtractor() {
-        super("features_facialEmotion", AttributeDefinition.AttributeType.STRING);
+        super("features_facialEmotion", new AttributeDefinition[]{new AttributeDefinition("feature", AttributeDefinition.AttributeType.STRING)});
     }
 
     @Override
@@ -23,7 +23,6 @@ public class FacialEmotionExtractor extends AbstractMLExtractor {
         if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME)
             return;
 
-        //Todo: Don't process if the shot is a video, since aesthetic score only works on images
         if(shot.getEnd() != 0) {
             System.out.println("Facial Emotion does not currently support videos. Aborting extraction");
             return;
@@ -45,7 +44,7 @@ public class FacialEmotionExtractor extends AbstractMLExtractor {
     private String getPredictedFacialEmotion(String objectID) {
         JSONObject serverResponse = null;
         try {
-            serverResponse = MLPredictorCommunication.getInstance().getJsonResponseFromMLPredictor(objectID, featureToPredict, 0, 0);
+            serverResponse = RemotePredictorCommunication.getInstance().getJsonResponseFromMLPredictor(objectID, featureToPredict, 0, 0);
             if (serverResponse == null) {
                 System.out.println("Server Response is null. No " + featureToPredict + "extracted for shot:" + objectID);
                 return null;

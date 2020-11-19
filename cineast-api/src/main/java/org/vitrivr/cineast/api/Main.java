@@ -1,6 +1,6 @@
 package org.vitrivr.cineast.api;
 
-import org.vitrivr.cineast.core.ml_communication.MLPredictorCommunication;
+import org.vitrivr.cineast.core.remote_predictor_communication.RemotePredictorCommunication;
 import org.vitrivr.cineast.standalone.cli.CineastCli;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.monitoring.PrometheusServer;
@@ -28,7 +28,7 @@ public class Main {
       }
     }
 
-    MLPredictorCommunication.getInstance().setMlPredictorsConfig(Config.sharedConfig().getMlPredictorsConfig());
+    RemotePredictorCommunication.getInstance().setRemotePredictorsConfig(Config.sharedConfig().getRemotePredictorsConfig());
 
     /* Start Cineast API endpoint. */
     APIEndpoint.getInstance().start();
