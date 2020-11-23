@@ -4,25 +4,27 @@ import org.vitrivr.cineast.core.data.entities.SimplePrimitiveTypeProviderFeature
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
+import org.vitrivr.cineast.core.db.PersistentTuple;
 import org.vitrivr.cineast.core.db.dao.writer.PrimitiveTypeProviderFeatureDescriptorWriter;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 
-import java.util.HashMap;
 import java.util.function.Supplier;
+
 
 public abstract class BaseRemoteFeatureExtractor implements Extractor {
 
+    protected final String featureToPredict;
     protected final String tableName;
     private final AttributeDefinition[] columnNameAndType;
 
     protected PrimitiveTypeProviderFeatureDescriptorWriter primitiveWriter;
     protected PersistencyWriter<?> phandler;
 
-    public BaseRemoteFeatureExtractor(String tableName, AttributeDefinition[] columnNameAndType)
-    {
+    public BaseRemoteFeatureExtractor(String tableName, String featureToPredict, AttributeDefinition[] columnNameAndType) {
         this.tableName = tableName;
+        this.featureToPredict = featureToPredict;
         this.columnNameAndType = columnNameAndType;
     }
 
@@ -32,10 +34,28 @@ public abstract class BaseRemoteFeatureExtractor implements Extractor {
         this.primitiveWriter.write(descriptor);
     }
 
+    protected void persist(Object[] objectsToPersist) {
+
+        PersistentTuple tuple = this.phandler.generateTuple(objectsToPersist);
+        this.phandler.persist(tuple);
+    }
+
     @Override
     public void init(PersistencyWriterSupplier phandlerSupply, int batchSize) {
         this.phandler = phandlerSupply.get();
+        this.phandler.open(this.tableName);
+        this.phandler.setFieldNames(getColumnNames());
         this.primitiveWriter = new PrimitiveTypeProviderFeatureDescriptorWriter(this.phandler, this.tableName, batchSize);
+    }
+
+    private String[] getColumnNames() {
+        int numOfColumnsWithoutId = columnNameAndType.length;
+        String[] columnNames = new String[numOfColumnsWithoutId + 1];
+        columnNames[0] = "id";
+        for (int i = 0; i < numOfColumnsWithoutId; i++) {
+            columnNames[i + 1] = columnNameAndType[i].getName();
+        }
+        return columnNames;
     }
 
     @Override
@@ -53,7 +73,13 @@ public abstract class BaseRemoteFeatureExtractor implements Extractor {
 
     @Override
     public void initalizePersistentLayer(Supplier<EntityCreator> supply) {
-        supply.get().createFeatureEntity(tableName, true, columnNameAndType);
+        int numOfColumns = columnNameAndType.length;
+        if (numOfColumns == 1 && columnNameAndType[0].getName().equals("feature"))
+            supply.get().createFeatureEntity(tableName, true, columnNameAndType);
+        else if (numOfColumns > 1)
+            supply.get().createIdEntity(tableName, columnNameAndType);
+
+
     }
 
     @Override

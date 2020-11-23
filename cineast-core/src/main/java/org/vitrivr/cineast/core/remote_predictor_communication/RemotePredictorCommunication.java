@@ -39,8 +39,9 @@ public enum RemotePredictorCommunication {
 
     public JSONObject getJsonResponseFromMLPredictor(String objectID, String featureToPredict, int shotStart, int shotEnd) {
 
-        if (objectIDToServerResponseMap.containsKey(objectID))
-            return objectIDToServerResponseMap.get(objectID);
+        //Todo: Does the two lines below make sense?
+        /*if (objectIDToServerResponseMap.containsKey(objectID))
+            return objectIDToServerResponseMap.get(objectID);*/
 
         if(remotePredictorsConfig == null)
         {

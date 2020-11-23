@@ -12,10 +12,8 @@ import org.vitrivr.cineast.core.remote_predictor_communication.RemotePredictorCo
 
 public class AestheticScoreExtractor extends BaseRemoteFeatureExtractor {
 
-    private final String featureToPredict = "aesthetic score";
-
     public AestheticScoreExtractor() {
-        super("features_AestheticScore", new AttributeDefinition[]{new AttributeDefinition("feature",AttributeDefinition.AttributeType.FLOAT)});
+        super("features_AestheticScore", "aesthetic score", new AttributeDefinition[]{new AttributeDefinition("feature",AttributeDefinition.AttributeType.FLOAT)});
 
     }
 

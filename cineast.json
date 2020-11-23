@@ -77,13 +77,8 @@
       ],
       "boolean": [
         {
-          "feature": "RangeBooleanRetriever",
-          "weight": 1.0,
-          "properties": [{
-            "entity": "features_aestheticscore",
-            "attribute": "feature"
-          }
-          ]
+          "feature": "HecateImageMetricsRangeBooleanRetriever",
+          "weight": 1.0
         }
       ]
     }
@@ -138,6 +133,7 @@
   },
   "remotePredictorsConfig": {
     "aesthetic score": "http://localhost:5001/predict",
-    "facial emotion": "http://localhost:5002/predict"
+    "facial emotion": "http://localhost:5002/predict",
+    "hecate image metrics": "http://localhost:5004/predict"
   }
 }

@@ -11,11 +11,8 @@ import org.vitrivr.cineast.core.remote_predictor_communication.RemotePredictorCo
 
 public class FacialEmotionExtractor extends BaseRemoteFeatureExtractor {
 
-    private final String featureToPredict = "facial emotion";
-
-
     public FacialEmotionExtractor() {
-        super("features_facialEmotion", new AttributeDefinition[]{new AttributeDefinition("feature", AttributeDefinition.AttributeType.STRING)});
+        super("features_facialEmotion", "facial emotion", new AttributeDefinition[]{new AttributeDefinition("feature", AttributeDefinition.AttributeType.STRING)});
     }
 
     @Override
