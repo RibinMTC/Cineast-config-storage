@@ -10,6 +10,12 @@
   },
   "extractors": [
     {
+      "name": "AestheticScoreExtractor"
+    },
+    {
+      "name": "FacialEmotionExtractor"
+    },
+    {
       "name": "HecateImageMetricsRemoteExtractor"
     }
   ],

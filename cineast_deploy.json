@@ -77,7 +77,10 @@
       ],
       "boolean": [
         {
-          "feature": "HecateImageMetricsRangeBooleanRetriever",
+          "feature": "CombinedAestheticMetricsRetriever",
+          "properties": {
+            "entities": "features_aestheticscore, features_hecateimagemetrics, features_facialemotion"
+          },
           "weight": 1.0
         }
       ]
@@ -124,16 +127,16 @@
     "serveContent": true,
     "serveUI": true,
     "uiLocation": "dist",
-    "thumbnailLocation": "../../output-thumbnails",
-    "objectLocation": "../../content-base"
+    "thumbnailLocation": "/content-storage/output-thumbnails",
+    "objectLocation": "/content-storage/content-base"
   },
   "monitoring": {
     "enablePrometheus": false,
     "prometheusPort": 4569
   },
   "remotePredictorsConfig": {
-    "aesthetic score": "http://localhost:5001/predict",
-    "facial emotion": "http://localhost:5002/predict",
-    "hecate image metrics": "http://localhost:5004/predict"
+    "aesthetic score": "http://mlsp-aesthetic-score-predictor:5001/predict",
+    "facial emotion": "http://deep-face-emotion-predictor:5002/predict",
+    "hecate image metrics": "http://hecate-image-metrics-predictor:5004/predict"
   }
 }

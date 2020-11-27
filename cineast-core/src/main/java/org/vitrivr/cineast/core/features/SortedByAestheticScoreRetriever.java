@@ -85,9 +85,8 @@ public class SortedByAestheticScoreRetriever extends BooleanRetriever {
     @Override
     protected List<ScoreElement> getMatching(List<BooleanExpression> expressions, ReadableQueryConfig qc) {
         List<Map<String, PrimitiveTypeProvider>> rows = selector.getRowsAND(expressions.stream().map(be ->
-                Triple.of(be.getAttribute().contains(this.entity) ? be.getAttribute().substring(this.entity.length() + 1) : be.getAttribute(), be.getOperator(), be.getValues())).collect(Collectors.toList()), "id", Lists.newArrayList("id", "feature"), qc); //Collections.singletonList("id")
+                Triple.of(be.getAttribute().contains(this.entity) ? be.getAttribute().substring(this.entity.length() + 1) : be.getAttribute(), be.getOperator(), be.getValues())).collect(Collectors.toList()), "id", Lists.newArrayList("id", "feature"), qc);
 
-        //List<Map<String, PrimitiveTypeProvider>> features = selector.getRowsAND(expressions.stream().map(be -> Triple.of(be.getAttribute().contains(this.entity) ? be.getAttribute().substring(this.entity.length() + 1) : be.getAttribute(), be.getOperator(), be.getValues())).collect(Collectors.toList()), "id", Collections.singletonList("feature"), qc);
         int rowsCount = rows.size();
         List<ScoreElement> scoreElements = new ArrayList<>();
         for (int i = 0; i < rowsCount; i++) {

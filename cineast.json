@@ -77,7 +77,10 @@
       ],
       "boolean": [
         {
-          "feature": "HecateImageMetricsRangeBooleanRetriever",
+          "feature": "CombinedAestheticMetricsRetriever",
+          "properties": {
+            "entities": "features_aestheticscore, features_hecateimagemetrics, features_facialemotion"
+          },
           "weight": 1.0
         }
       ]
