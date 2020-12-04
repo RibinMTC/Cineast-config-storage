@@ -23,11 +23,13 @@ public class AestheticScoreExtractor extends BaseRemoteFeatureExtractor {
         if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME)
             return;
 
-        int shotStart = shot.getStart();
-        int shotEnd = shot.getEnd();
+        if(shot.getEnd() != 0) {
+            System.out.println("Facial Emotion does not currently support videos. Aborting extraction");
+            return;
+        }
 
         if (!phandler.idExists(shot.getId())) {
-            float serverScore = getPredictedAestheticScore(shot.getSuperId(), shotStart, shotEnd);
+            float serverScore = getPredictedAestheticScore(shot.getSuperId());
             if (serverScore == -1)
                 return;
 
@@ -40,11 +42,11 @@ public class AestheticScoreExtractor extends BaseRemoteFeatureExtractor {
 
     }
 
-    private float getPredictedAestheticScore(String objectID, int shotStart, int shotEnd) {
+    private float getPredictedAestheticScore(String objectID) {
         JSONObject serverResponse = null;
         try {
 
-            serverResponse = RemotePredictorCommunication.getInstance().getJsonResponseFromMLPredictor(objectID, featureToPredict, shotStart, shotEnd);
+            serverResponse = RemotePredictorCommunication.getInstance().getJsonResponseFromMLPredictor(objectID, featureToPredict, 0, 0);
             if (serverResponse == null) {
                 System.out.println("Server Response is null. Aborting Extraction");
                 return -1;

@@ -32,8 +32,7 @@ public enum RemotePredictorCommunication {
         objectIDToUrlMap.put(objectID, contentAbsolutePath);
     }
 
-    public void setRemotePredictorsConfig(HashMap<String, String> remotePredictorsConfig)
-    {
+    public void setRemotePredictorsConfig(HashMap<String, String> remotePredictorsConfig) {
         this.remotePredictorsConfig = remotePredictorsConfig;
     }
 
@@ -43,14 +42,12 @@ public enum RemotePredictorCommunication {
         /*if (objectIDToServerResponseMap.containsKey(objectID))
             return objectIDToServerResponseMap.get(objectID);*/
 
-        if(remotePredictorsConfig == null)
-        {
+        if (remotePredictorsConfig == null) {
             System.out.println("MlPredictorsConfig not set in cineast.json. Cannot extract to ml predictors.");
             return null;
         }
 
-        if(!remotePredictorsConfig.containsKey(featureToPredict))
-        {
+        if (!remotePredictorsConfig.containsKey(featureToPredict)) {
             System.out.println("MlPredictorsConfig does not contain key: " + featureToPredict + "Cannot extract to ml predictors");
             return null;
         }
@@ -63,7 +60,7 @@ public enum RemotePredictorCommunication {
 
         String contentPath = objectIDToUrlMap.get(objectID);
         try {
-            if(shotEnd != 0)
+            if (shotEnd != 0)
                 Unirest.setTimeouts(10000, 120000);
             else
                 Unirest.setTimeouts(10000, 60000);
@@ -71,7 +68,7 @@ public enum RemotePredictorCommunication {
             HttpResponse<JsonNode> response = Unirest.post(remotePredictorsConfig.get(featureToPredict))
                     .header("Content-Type", "application/json")
                     .body("{\"contentPath\":\"" + contentPath + "\"," +
-                            "\"startFrame\":\"" + shotStart + "\","+
+                            "\"startFrame\":\"" + shotStart + "\"," +
                             "\"endFrame\":\"" + shotEnd + "\"}")
                     .asJson();
 
@@ -86,9 +83,10 @@ public enum RemotePredictorCommunication {
 
         } catch (UnirestException e) {
             e.printStackTrace();
+            return null;
         }
 
-        return null;
+
     }
 
 }

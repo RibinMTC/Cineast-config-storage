@@ -39,15 +39,12 @@ public class HecateImageMetricsRemoteExtractor extends BaseRemoteFeatureExtracto
         if (shot.getMostRepresentativeFrame() == VideoFrame.EMPTY_VIDEO_FRAME)
             return;
 
-        if (shot.getEnd() != 0) {
-            System.out.println("Hecate Image metrics does not currently support videos. Aborting extraction");
-            return;
-        }
-
+        int shotStart = shot.getStart();
+        int shotEnd = shot.getEnd();
         if (!phandler.idExists(shot.getId())) {
 
             String shotId = shot.getId();
-            float[] imageMetrics = getPredictedImageMetrics(shot.getSuperId());
+            float[] imageMetrics = getPredictedImageMetrics(shot.getSuperId(), shotStart, shotEnd);
             if(imageMetrics == null)
             {
                 System.out.println("Predicted Hecate Image Metric for shotId: " + shotId + "was null. Skipping extraction for this shot.");
@@ -58,12 +55,12 @@ public class HecateImageMetricsRemoteExtractor extends BaseRemoteFeatureExtracto
         }
     }
 
-    private float[] getPredictedImageMetrics(String objectID) {
+    private float[] getPredictedImageMetrics(String objectID, int shotStart, int shotEnd) {
         JSONObject serverResponse = null;
         float[] predictedImageMetrics = new float[numOfMetrics];
         try {
 
-            serverResponse = RemotePredictorCommunication.getInstance().getJsonResponseFromMLPredictor(objectID, featureToPredict, 0, 0);
+            serverResponse = RemotePredictorCommunication.getInstance().getJsonResponseFromMLPredictor(objectID, featureToPredict, shotStart, shotEnd);
             if (serverResponse == null) {
                 System.out.println("Server Response is null. Aborting Extraction");
                 return null;
@@ -86,11 +83,7 @@ public class HecateImageMetricsRemoteExtractor extends BaseRemoteFeatureExtracto
     }
 
     private void persistMultipleValues(String shotId, float... valuesToPersist) {
-       /* List<PrimitiveTypeProvider> primitiveTypeProviders = new ArrayList<>();
-        for (float valueToPersist :
-                valuesToPersist) {
-            primitiveTypeProviders.add(PrimitiveTypeProvider.fromObject(valueToPersist));
-        }*/
+
         int numOfValuesToPersist = valuesToPersist.length;
         Object[] objectsToPersist = new Object[numOfValuesToPersist + 1];
         objectsToPersist[0] = shotId;
