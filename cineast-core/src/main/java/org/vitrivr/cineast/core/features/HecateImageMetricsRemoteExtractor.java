@@ -11,7 +11,11 @@ import org.vitrivr.cineast.core.remote_predictor_communication.RemotePredictorCo
 
 import java.util.Arrays;
 
+/**
+ * Old way of creating aesthetic extractors. Now the functionality is moved to the ConfigurableAestheticFeatureExtractor
+ */
 
+/*
 public class HecateImageMetricsRemoteExtractor extends BaseRemoteFeatureExtractor {
 
     private final String[] imageMetricNames;
@@ -93,3 +97,4 @@ public class HecateImageMetricsRemoteExtractor extends BaseRemoteFeatureExtracto
         persist(objectsToPersist);
     }
 }
+*/

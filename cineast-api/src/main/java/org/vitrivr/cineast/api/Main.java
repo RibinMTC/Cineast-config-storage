@@ -1,10 +1,16 @@
 package org.vitrivr.cineast.api;
 
+import org.vitrivr.cineast.core.config.AestheticPredictorConfig;
+import org.vitrivr.cineast.core.features.AestheticPredictorsConfigStorage;
+import org.vitrivr.cineast.core.features.MainAestheticFeaturesPredictorInitializer;
 import org.vitrivr.cineast.core.remote_predictor_communication.RemotePredictorCommunication;
 import org.vitrivr.cineast.standalone.cli.CineastCli;
 import org.vitrivr.cineast.standalone.config.Config;
 import org.vitrivr.cineast.standalone.monitoring.PrometheusServer;
 import org.vitrivr.cineast.standalone.util.CLI;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class Main {
 
@@ -28,7 +34,10 @@ public class Main {
       }
     }
 
-    RemotePredictorCommunication.getInstance().setRemotePredictorsConfig(Config.sharedConfig().getRemotePredictorsConfig());
+    //Todo: Is there a better way to pass the config to the MainAestheticFeaturesPredictorInitializer?
+   AestheticPredictorsConfigStorage.getInstance().setAestheticPredictorsConfig(Config.sharedConfig().getAestheticPredictorsConfig());
+  //  MainAestheticFeaturesPredictorInitializer test = new MainAestheticFeaturesPredictorInitializer(Config.sharedConfig().getAestheticPredictorsConfig());
+    //List<AestheticPredictorConfig> test = Config.sharedConfig().getAestheticPredictorsConfig();
 
     /* Start Cineast API endpoint. */
     APIEndpoint.getInstance().start();

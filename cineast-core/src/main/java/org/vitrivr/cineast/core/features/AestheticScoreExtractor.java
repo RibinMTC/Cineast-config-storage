@@ -9,7 +9,10 @@ import org.vitrivr.cineast.core.remote_extractor_base.BaseRemoteFeatureExtractor
 import org.vitrivr.cineast.core.remote_predictor_communication.RemotePredictorCommunication;
 
 
-
+/**
+ * Old way of creating aesthetic extractors. Now the functionality is moved to the ConfigurableAestheticFeatureExtractor
+ */
+/*
 public class AestheticScoreExtractor extends BaseRemoteFeatureExtractor {
 
     public AestheticScoreExtractor() {
@@ -61,3 +64,4 @@ public class AestheticScoreExtractor extends BaseRemoteFeatureExtractor {
         }
     }
 }
+*/

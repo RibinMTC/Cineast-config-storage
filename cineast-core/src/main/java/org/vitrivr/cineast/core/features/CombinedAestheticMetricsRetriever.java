@@ -3,6 +3,7 @@ package org.vitrivr.cineast.core.features;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.AestheticPredictorConfig;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.score.BooleanSegmentScoreElement;
@@ -59,6 +60,15 @@ public class CombinedAestheticMetricsRetriever implements Retriever {
         this.entities = Arrays.stream(properties.get("entities").split(",")).map(String::trim)
                 .collect(
                         Collectors.toList());
+    }
+
+    public CombinedAestheticMetricsRetriever() {
+        List<AestheticPredictorConfig> aestheticPredictorConfigs = AestheticPredictorsConfigStorage.getInstance().getAestheticPredictorsConfig();
+        entities = new ArrayList<>();
+        for (AestheticPredictorConfig aestheticPredictorConfig :
+                aestheticPredictorConfigs) {
+            entities.add(aestheticPredictorConfig.getTableName());
+        }
     }
 
     protected boolean canProcess(BooleanExpression be) {
