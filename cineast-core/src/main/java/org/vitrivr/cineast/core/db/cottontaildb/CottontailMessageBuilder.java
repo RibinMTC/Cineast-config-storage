@@ -1,6 +1,7 @@
 package org.vitrivr.cineast.core.db.cottontaildb;
 
 import static org.vitrivr.cineast.core.db.RelationalOperator.NEQ;
+import static org.vitrivr.cineast.core.db.RelationalOperator.NLIKE;
 
 import com.google.common.primitives.Booleans;
 import com.google.common.primitives.Doubles;

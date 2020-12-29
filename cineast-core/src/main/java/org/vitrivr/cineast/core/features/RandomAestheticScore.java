@@ -3,21 +3,26 @@ package org.vitrivr.cineast.core.features;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.entities.SimplePrimitiveTypeProviderFeatureDescriptor;
 import org.vitrivr.cineast.core.data.frames.VideoFrame;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
+import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
+import org.vitrivr.cineast.core.db.DBSelector;
+import org.vitrivr.cineast.core.db.DBSelectorSupplier;
 import org.vitrivr.cineast.core.db.PersistencyWriter;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
 import org.vitrivr.cineast.core.db.dao.writer.PrimitiveTypeProviderFeatureDescriptorWriter;
 import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
+import org.vitrivr.cineast.core.features.retriever.Retriever;
 
 import java.util.*;
 import java.util.function.Supplier;
 
-public class RandomAestheticScore implements Extractor {
+public class RandomAestheticScore implements Extractor, Retriever {
 
     private static final Logger LOGGER = LogManager.getLogger();
     protected PrimitiveTypeProviderFeatureDescriptorWriter primitiveWriter;
@@ -30,7 +35,9 @@ public class RandomAestheticScore implements Extractor {
     protected final String tableName = "features_RandomAestheticScore";
 
     private final String columnName = "feature";
-    private final AttributeDefinition.AttributeType attributeType = AttributeDefinition.AttributeType.FLOAT;
+    private final AttributeDefinition.AttributeType attributeType = AttributeDefinition.AttributeType.STRING;
+
+    protected DBSelector selector = null;
 
     public RandomAestheticScore() {
         random = new Random();
@@ -60,14 +67,36 @@ public class RandomAestheticScore implements Extractor {
 
         if (!phandler.idExists(shot.getId())) {
 
-            float serverScore = getRandomAestheticScore();//MLPredictiorCommunication.getJsonResponseFromMLPredictor("/home/cribin/AestheticProject/resources/66.jpg");
-
+            // float serverScore = getRandomAestheticScore();
+            //  float serverScore2 = getRandomAestheticScore();
+            String emotion1 = "surprise, disgust";
+            String emotion2 = "fear";
+            String emotion3 = "disgusted, surprised";
             String shotId = shot.getId();
 
-            persist(shotId, PrimitiveTypeProvider.fromObject(serverScore));
-            System.out.println("Aesthetic Score for shotId: " + shotId + " score: " + serverScore + " writing with new Extractor");
+            persist(shotId, PrimitiveTypeProvider.fromObject(emotion1));
+            persist(shotId, PrimitiveTypeProvider.fromObject(emotion2));
+            persist(shotId, PrimitiveTypeProvider.fromObject(emotion3));
+            System.out.println("Aesthetic Score for shotId: " + shotId + " emotion: " + emotion1 + " writing with new Extractor");
+            System.out.println("Aesthetic Score for shotId: " + shotId + " emotion: " + emotion2 + " writing with new Extractor");
         }
 
+    }
+
+    @Override
+    public void init(DBSelectorSupplier selectorSupply) {
+        this.selector = selectorSupply.get();
+        this.selector.open(this.tableName);
+    }
+
+    @Override
+    public List<ScoreElement> getSimilar(SegmentContainer sc, ReadableQueryConfig qc) {
+        return null;
+    }
+
+    @Override
+    public List<ScoreElement> getSimilar(String segmentId, ReadableQueryConfig qc) {
+        return null;
     }
 
     @Override

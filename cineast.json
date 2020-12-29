@@ -77,8 +77,12 @@
       ],
       "boolean": [
         {
-          "feature": "CombinedAestheticMetricsRetriever",
-          "weight": 1.0
+          "feature": "RangeBooleanRetriever",
+          "weight": 1.0,
+          "properties": {
+            "entity": "features_randomaestheticscore",
+            "attribute": "feature"
+          }
         }
       ]
     }
@@ -133,28 +137,13 @@
   },
   "aestheticPredictorsConfig": [
     {
-      "tableName": "features_hecate_image_metrics",
-      "apiAddress": "http://localhost:5004/predict",
+      "tableName": "features_facial_emotion_vector",
+      "apiAddress": "http://localhost:5007/predict",
       "columnNameAndType": {
-        "Brightness": "float",
-        "Sharpness": "float",
-        "Asymmetry": "float"
+        "facialEmotions": "string"
       },
-      "videoSupport": true
-    },
-    {"tableName": "features_aesthetic_score",
-      "apiAddress": "http://localhost:5001/predict",
-      "columnNameAndType": {
-        "aestheticScore":"float"
-      },
-      "videoSupport": false
-    },
-    {"tableName": "features_facial_emotion",
-      "apiAddress": "http://localhost:5002/predict",
-      "columnNameAndType": {
-        "facialEmotion":"string"
-      },
-      "videoSupport": false
+      "videoSupport": false,
+      "multipleValuesPerPrediction": true
     }
   ]
 }

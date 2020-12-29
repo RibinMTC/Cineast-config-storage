@@ -1,6 +1,6 @@
 {
   "input": {
-    "path": "/local/home/cribin/Documents/AestheticsBackup/Aesthetics_ContentViewer_Main/content-base/images1/",
+    "path": "/local/home/cribin/Documents/AestheticsBackup/Aesthetics_ContentViewer_Main/content-base/images4/",
     "depth": 2,
     "skip": 0,
     "id": {
@@ -9,9 +9,6 @@
     }
   },
   "extractors": [
-    {
-      "name": "AverageColor"
-    },
     {
       "name": "MainAestheticFeaturesPredictorInitializer"
     }

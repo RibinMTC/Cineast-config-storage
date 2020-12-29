@@ -11,6 +11,7 @@ public class AestheticPredictorConfig {
     private String apiAddress;
     private Boolean videoSupport;
     private HashMap<String, String> columnNameAndType;
+    private Boolean multipleValuesPerPrediction;
 
     @JsonCreator
     public AestheticPredictorConfig(){}
@@ -49,5 +50,14 @@ public class AestheticPredictorConfig {
 
     public void setColumnNameAndType(HashMap<String, String> columnNameAndType) {
         this.columnNameAndType = columnNameAndType;
+    }
+
+    @JsonProperty
+    public Boolean getMultipleValuesPerPrediction() {
+        return multipleValuesPerPrediction;
+    }
+
+    public void setMultipleValuesPerPrediction(Boolean multipleValuesPerPrediction) {
+        this.multipleValuesPerPrediction = multipleValuesPerPrediction;
     }
 }

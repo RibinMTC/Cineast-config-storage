@@ -27,25 +27,9 @@ public class MainAestheticFeaturesPredictorInitializer implements Extractor {
         activeExtractors = new ArrayList<>();
         for (AestheticPredictorConfig aestheticPredictorConfig :
                 aestheticPredictorConfigs) {
-            AttributeDefinition[] columnNameAndType = getColumnNameAndType(aestheticPredictorConfig.getColumnNameAndType());
-            ConfigurableAestheticFeatureExtractor extractor = new ConfigurableAestheticFeatureExtractor(aestheticPredictorConfig.getTableName(),
-                    columnNameAndType, aestheticPredictorConfig.getApiAddress(), aestheticPredictorConfig.getVideoSupport());
+            ConfigurableAestheticFeatureExtractor extractor = new ConfigurableAestheticFeatureExtractor(aestheticPredictorConfig);
             activeExtractors.add(extractor);
         }
-    }
-
-    private AttributeDefinition[] getColumnNameAndType(HashMap<String, String> columnNameAndTypeString) {
-        int numOfColumns = columnNameAndTypeString.size();
-        AttributeDefinition[] columnNameAndType = new AttributeDefinition[numOfColumns];
-        int counter = 0;
-        for (Map.Entry<String, String> entry : columnNameAndTypeString.entrySet()) {
-            String attributeTypeUpperCase = entry.getValue().toUpperCase();
-            columnNameAndType[counter] = new AttributeDefinition(entry.getKey(), AttributeDefinition.AttributeType.valueOf(attributeTypeUpperCase));
-            counter++;
-        }
-
-        return columnNameAndType;
-
     }
 
     @Override

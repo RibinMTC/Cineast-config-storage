@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.vitrivr.cineast.core.config.ReadableQueryConfig;
 import org.vitrivr.cineast.core.data.providers.primitive.PrimitiveTypeProvider;
 import org.vitrivr.cineast.core.data.providers.primitive.ProviderDataType;
+import org.vitrivr.cineast.core.data.providers.primitive.StringTypeProvider;
 import org.vitrivr.cineast.core.data.score.BooleanSegmentScoreElement;
 import org.vitrivr.cineast.core.data.score.ScoreElement;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
@@ -84,6 +85,7 @@ public abstract class BooleanRetriever implements Retriever {
 
   protected List<ScoreElement> getMatching(List<BooleanExpression> expressions, ReadableQueryConfig qc){
 
+
     List<Map<String, PrimitiveTypeProvider>> rows = selector.getRowsAND(expressions.stream().map(be -> Triple.of(be.getAttribute().contains(this.entity) ? be.getAttribute().substring(this.entity.length()+1) : be.getAttribute(), be.getOperator(), be.getValues())).collect(Collectors.toList()), "id", Collections.singletonList("id"), qc);
 
     return rows.stream().map(row -> new BooleanSegmentScoreElement(row.get("id").getString())).collect(Collectors.toList());
@@ -112,4 +114,36 @@ public abstract class BooleanRetriever implements Retriever {
   public ProviderDataType getColumnType(String column){
     return this.columnTypes.get(column);
   }
+
+  /*
+  private RelationalOperator getRelationOperator(RelationalOperator currentRelationalOperator)
+  {
+     if(currentRelationalOperator == RelationalOperator.EQ)
+       return RelationalOperator.LIKE;
+     else if(currentRelationalOperator == RelationalOperator.NEQ)
+       return RelationalOperator.NLIKE;
+     else
+       return currentRelationalOperator;
+  }
+
+  private List<PrimitiveTypeProvider> getValuesWithWildcard(RelationalOperator operator, List<PrimitiveTypeProvider> test)
+  {
+    if(operator != RelationalOperator.EQ && operator != RelationalOperator.NEQ)
+      return test;
+    
+    List<PrimitiveTypeProvider> wildcardList = new ArrayList<>();
+    for (PrimitiveTypeProvider value : test)
+    {
+      if(value.getType() == ProviderDataType.STRING)
+      {
+        String currentValue = value.getString();
+         PrimitiveTypeProvider valueWithWildcard = new StringTypeProvider("%"+currentValue+"%");
+         wildcardList.add(valueWithWildcard);
+         continue;
+      }
+      wildcardList.add(value);
+    }
+
+    return wildcardList;
+  }*/
 }

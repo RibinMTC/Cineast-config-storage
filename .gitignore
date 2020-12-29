@@ -64,3 +64,4 @@ index*
 .DS_Store
 
 *.zip
+/aws_secret.txt
