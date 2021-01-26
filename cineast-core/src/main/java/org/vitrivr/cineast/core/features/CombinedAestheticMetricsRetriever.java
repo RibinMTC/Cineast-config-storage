@@ -63,7 +63,7 @@ public class CombinedAestheticMetricsRetriever implements Retriever {
     }
 
     public CombinedAestheticMetricsRetriever() {
-        List<AestheticPredictorConfig> aestheticPredictorConfigs = AestheticPredictorsConfigStorage.getInstance().getAestheticPredictorsConfig();
+        List<AestheticPredictorConfig> aestheticPredictorConfigs = AestheticPredictorsConfigStorage.getInstance().getAllAestheticPredictorsConfig();
         entities = new ArrayList<>();
         for (AestheticPredictorConfig aestheticPredictorConfig :
                 aestheticPredictorConfigs) {

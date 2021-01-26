@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 public class AestheticPredictorConfig {
 
+    private int predictorId;
     private String tableName;
     private String apiAddress;
     private Boolean videoSupport;
@@ -15,6 +16,15 @@ public class AestheticPredictorConfig {
 
     @JsonCreator
     public AestheticPredictorConfig(){}
+
+    @JsonProperty
+    public int getPredictorId() {
+        return predictorId;
+    }
+
+    public void setPredictorId(int predictorId) {
+        this.predictorId = predictorId;
+    }
 
     @JsonProperty
     public String getTableName() {

@@ -132,21 +132,28 @@
     "prometheusPort": 4569
   },
   "aestheticPredictorsConfig": [
-    {"tableName": "features_aesthetic_score",
+    {
+      "predictorId": 1,
+      "tableName": "features_aesthetic_score",
       "apiAddress": "http://mlsp-aesthetic-score-predictor:5001/predict",
       "columnNameAndType": {
-        "aestheticScore":"float"
+        "aestheticScore": "float"
       },
-      "videoSupport": false
-    },
-    {"tableName": "features_facial_emotion",
-      "apiAddress": "http://deep-face-emotion-predictor:5002/predict",
-      "columnNameAndType": {
-        "facialEmotion":"string"
-      },
-      "videoSupport": false
+      "videoSupport": false,
+      "multipleValuesPerPrediction": false
     },
     {
+      "predictorId": 2,
+      "tableName": "features_facial_emotion",
+      "apiAddress": "http://localhost:5007/predict",
+      "columnNameAndType": {
+        "facialEmotions": "string"
+      },
+      "videoSupport": false,
+      "multipleValuesPerPrediction": true
+    },
+    {
+      "predictorId": 3,
       "tableName": "features_hecate_image_metrics",
       "apiAddress": "http://hecate-image-metrics-predictor:5004/predict",
       "columnNameAndType": {
@@ -154,7 +161,12 @@
         "Sharpness": "float",
         "Asymmetry": "float"
       },
-      "videoSupport": true
+      "videoSupport": true,
+      "multipleValuesPerPrediction": false
     }
+  ],
+  "activePredictors": [
+    1,
+    2
   ]
 }

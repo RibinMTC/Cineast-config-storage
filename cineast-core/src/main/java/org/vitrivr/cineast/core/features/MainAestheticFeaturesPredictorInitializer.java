@@ -3,14 +3,11 @@ package org.vitrivr.cineast.core.features;
 import org.vitrivr.cineast.core.config.AestheticPredictorConfig;
 import org.vitrivr.cineast.core.data.segments.SegmentContainer;
 import org.vitrivr.cineast.core.db.PersistencyWriterSupplier;
-import org.vitrivr.cineast.core.db.setup.AttributeDefinition;
 import org.vitrivr.cineast.core.db.setup.EntityCreator;
 import org.vitrivr.cineast.core.features.extractor.Extractor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -23,7 +20,7 @@ public class MainAestheticFeaturesPredictorInitializer implements Extractor {
 
     public MainAestheticFeaturesPredictorInitializer() {
 
-        List<AestheticPredictorConfig> aestheticPredictorConfigs = AestheticPredictorsConfigStorage.getInstance().getAestheticPredictorsConfig();
+        List<AestheticPredictorConfig> aestheticPredictorConfigs = AestheticPredictorsConfigStorage.getInstance().getActiveAestheticPredictorsConfig();
         activeExtractors = new ArrayList<>();
         for (AestheticPredictorConfig aestheticPredictorConfig :
                 aestheticPredictorConfigs) {

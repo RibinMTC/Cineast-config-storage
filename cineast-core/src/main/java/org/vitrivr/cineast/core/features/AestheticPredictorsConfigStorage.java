@@ -2,6 +2,7 @@ package org.vitrivr.cineast.core.features;
 
 import org.vitrivr.cineast.core.config.AestheticPredictorConfig;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,18 +13,29 @@ public enum AestheticPredictorsConfigStorage {
 
     INSTANCE;
 
-    private List<AestheticPredictorConfig> aestheticPredictorsConfig;
+    private List<AestheticPredictorConfig> activeAestheticPredictorsConfig;
+    private List<AestheticPredictorConfig> allAestheticPredictorsConfig;
 
     public static AestheticPredictorsConfigStorage getInstance() {
         return INSTANCE;
     }
 
-    public void setAestheticPredictorsConfig(List<AestheticPredictorConfig> aestheticPredictorConfigs)
+    public void setAestheticPredictorsConfig(List<AestheticPredictorConfig> aestheticPredictorConfigs, List<Integer> activePredictorsConfig)
     {
-        this.aestheticPredictorsConfig = aestheticPredictorConfigs;
+        this.activeAestheticPredictorsConfig = new ArrayList<>();
+        for (AestheticPredictorConfig config : aestheticPredictorConfigs)
+        {
+            if(activePredictorsConfig.contains(config.getPredictorId()))
+                activeAestheticPredictorsConfig.add(config);
+        }
+        this.allAestheticPredictorsConfig = aestheticPredictorConfigs;
     }
 
-    public List<AestheticPredictorConfig> getAestheticPredictorsConfig() {
-        return aestheticPredictorsConfig;
+    public List<AestheticPredictorConfig> getActiveAestheticPredictorsConfig() {
+        return activeAestheticPredictorsConfig;
+    }
+
+    public List<AestheticPredictorConfig> getAllAestheticPredictorsConfig() {
+        return allAestheticPredictorsConfig;
     }
 }

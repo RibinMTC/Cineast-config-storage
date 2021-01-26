@@ -32,6 +32,7 @@ public class Config {
     private BenchmarkConfig benchmark = new BenchmarkConfig();
     private MonitoringConfig monitoring = new MonitoringConfig();
     private List<AestheticPredictorConfig> aestheticPredictorsConfig = new ArrayList<>();
+    private List<Integer> activePredictors = new ArrayList<>();
 
     /**
      * Accessor for shared (i.e. application wide) configuration.
@@ -153,5 +154,14 @@ public class Config {
 
     public void setAestheticPredictorsConfig(List<AestheticPredictorConfig> aestheticPredictorsConfig) {
         this.aestheticPredictorsConfig = aestheticPredictorsConfig;
+    }
+
+    @JsonProperty
+    public List<Integer> getActivePredictors() {
+        return activePredictors;
+    }
+
+    public void setActivePredictors(List<Integer> activePredictors) {
+        this.activePredictors = activePredictors;
     }
 }

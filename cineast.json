@@ -77,12 +77,8 @@
       ],
       "boolean": [
         {
-          "feature": "RangeBooleanRetriever",
-          "weight": 1.0,
-          "properties": {
-            "entity": "features_randomaestheticscore",
-            "attribute": "feature"
-          }
+          "feature": "CombinedAestheticMetricsRetriever",
+          "weight": 1.0
         }
       ]
     }
@@ -116,10 +112,10 @@
   "api": {
     "enableCLI": true,
     "enableWebsocket": true,
-    "enableWebsocketSecure": false,
+    "enableWebsocketSecure": true,
     "enableRest": true,
     "enableRestLiveDoc": true,
-    "enableRestSecure": false,
+    "enableRestSecure": true,
     "enableLegacy": false,
     "httpPort": 4567,
     "httpsPort": 4568,
@@ -129,7 +125,9 @@
     "serveUI": true,
     "uiLocation": "dist",
     "thumbnailLocation": "../../output-thumbnails",
-    "objectLocation": "../../content-base"
+    "objectLocation": "../../content-base",
+    "keystore": "/etc/ssl/certs/apache-selfsigned.jks",
+    "keystorePassword": "mtcCineast"
   },
   "monitoring": {
     "enablePrometheus": false,
@@ -137,13 +135,40 @@
   },
   "aestheticPredictorsConfig": [
     {
-      "tableName": "features_facial_emotion_vector",
+      "predictorId": 1,
+      "tableName": "features_aesthetic_score",
+      "apiAddress": "http://localhost:5001/predict",
+      "columnNameAndType": {
+        "aestheticScore": "float"
+      },
+      "videoSupport": false,
+      "multipleValuesPerPrediction": false
+    },
+    {
+      "predictorId": 2,
+      "tableName": "features_facial_emotion",
       "apiAddress": "http://localhost:5007/predict",
       "columnNameAndType": {
         "facialEmotions": "string"
       },
       "videoSupport": false,
       "multipleValuesPerPrediction": true
+    },
+    {
+      "predictorId": 3,
+      "tableName": "features_hecate_image_metrics",
+      "apiAddress": "http://localhost:5004/predict",
+      "columnNameAndType": {
+        "Brightness": "float",
+        "Sharpness": "float",
+        "Asymmetry": "float"
+      },
+      "videoSupport": true,
+      "multipleValuesPerPrediction": false
     }
+  ],
+  "activePredictors": [
+    2,
+    3
   ]
 }
