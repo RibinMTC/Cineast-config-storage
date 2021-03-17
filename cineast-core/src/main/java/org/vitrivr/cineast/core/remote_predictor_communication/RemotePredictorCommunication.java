@@ -91,9 +91,9 @@ public enum RemotePredictorCommunication {
         String contentPath = objectIDToUrlMap.get(objectID);
         try {
             if (shotEnd != 0)
-                Unirest.setTimeouts(10000, 120000);
+                Unirest.setTimeouts(10000, 0);
             else
-                Unirest.setTimeouts(10000, 60000);
+                Unirest.setTimeouts(10000, 0);
 
             HttpResponse<JsonNode> response = Unirest.post(apiAddress)
                     .header("Content-Type", "application/json")
